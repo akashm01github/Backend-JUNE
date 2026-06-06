@@ -1,10 +1,16 @@
 const app = require("./src/app");
+const connectDB = require("./src/db/db");
+const notesModel = require("./src/model/notes.model");
 
 
-const notes = [];
+connectDB();
+
+// const notes = [];
 
 // GET REQUEST 
-app.get('/notes', (req, res) => {
+app.get('/notes', async (req, res) => {
+    const notes = await notesModel.find();
+
     res.status(200).json({
         message: "Notes Fetched",
         notes
@@ -13,39 +19,47 @@ app.get('/notes', (req, res) => {
 
 
 //! CREATE 
-app.post('/notes', (req, res) => {
+app.post('/notes', async (req, res) => {
+    const { title, desc } = req.body;
 
-    notes.push(req.body)
+    await notesModel.create({
+        title,
+        desc
+    })
+
 
     res.status(200).json({
-        message: "Notes Created",
-        notes
+        message: "Notes Created"
     })
 })
 
 
 //! UPDATE 
-app.patch('/notes/:id', (req, res) => {
+app.patch('/notes/:id', async(req, res) => {
 
     const idx = req.params.id;
 
-    const {title} = req.body;
+    const { title } = req.body;
 
-    notes[idx].title = title
+    await notesModel.findByIdAndUpdate(
+        { _id: idx }, { title: title }
+    )
 
     res.status(200).json({
-        message: "Notes Updated",
-        notes
+        message: "Notes Updated"
     })
 })
 
 
 //! DELETE 
-app.delete('/notes/:id', (req, res) => {
+app.delete('/notes/:id', async(req, res) => {
 
     const idx = req.params.id;
 
-    delete notes[idx];
+    await notesModel.findByIdAndDelete({
+        _id:idx
+    })
+    
 
     res.status(200).json({
         message: "Notes Deleted"
