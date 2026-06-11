@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import * as faceapi from 'face-api.js';
-
+import axios from 'axios';
 
 const FacialExpression = () => {
 
@@ -20,12 +20,7 @@ const FacialExpression = () => {
         console.log('Model Loaded...')
     }
 
-    loadModel();
-
-
-
     //! START VIDEO
-
     const startVideo = async () => {
         const stream = await navigator.mediaDevices.getUserMedia({
             video: true
@@ -36,8 +31,14 @@ const FacialExpression = () => {
         console.log('Video Started...')
     }
 
-    startVideo();
-
+    //! STOP VIDEO
+    const stopVideo = () => {
+        const stream = videoRef.current?.srcObject;
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+        }
+    }
 
     //! DETECT EXPRESSION
     const detectExpression = async () => {
@@ -46,32 +47,58 @@ const FacialExpression = () => {
 
             const detection = await faceapi.detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
 
-            if(detection && detection.expressions){
-                const bestExpression = Object.entries(detection.expressions).reduce((a,b)=>a[1]>b[1] ?a:b)[0];
+            if (detection && detection.expressions) {
+                const bestExpression = Object.entries(detection.expressions).reduce((a, b) => a[1] > b[1] ? a : b)[0];
 
                 console.log(bestExpression)
-            }
 
+                const data = await axios.get(`http://localhost:3000/songs?mood=${bestExpression}`)
+
+                console.log(data)
+            }
 
         }, 500);
     }
 
-
-    detectExpression();
-
-
-
-    //! STOP ALL
-
     //! TOGGLE
-
+    const toggleDetection = async () => {
+        if (isRunning) {
+            clearInterval(intervalRef.current);
+            stopVideo();
+            setIsRunning(false);
+        } else {
+            await loadModel();
+            await startVideo();
+            detectExpression();
+            setIsRunning(true);
+        }
+    }
 
     return (
-        <div className="container">
-            <h2>Face Expression Detector</h2>
-            <div>
-                <video ref={videoRef} autoPlay muted width='500px' height='300px' src="" />
+        <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center gap-6 p-6">
+            <h2 className="text-2xl font-bold text-white">Face Expression Detector</h2>
+
+            <div className="rounded-xl overflow-hidden border border-gray-700 shadow-lg">
+                <video
+                    ref={videoRef}
+                    autoPlay
+                    muted
+                    width="500"
+                    height="300"
+                    className="bg-black"
+                />
             </div>
+
+            <button
+                onClick={toggleDetection}
+                className={`px-6 py-3 rounded-lg font-semibold text-white transition-colors duration-200 ${
+                    isRunning
+                        ? 'bg-red-600 hover:bg-red-700'
+                        : 'bg-green-600 hover:bg-green-700'
+                }`}
+            >
+                {isRunning ? 'Stop' : 'Start'}
+            </button>
         </div>
     )
 }
