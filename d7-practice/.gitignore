@@ -1,0 +1,100 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+**/node_modules/
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs
+# =========================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Build / Production
+# =========================
+build/
+dist/
+client/build/
+server/build/
+
+# =========================
+# Cache
+# =========================
+.cache/
+.parcel-cache/
+.eslintcache
+.vite/
+*.tsbuildinfo
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# =========================
+# Testing
+# =========================
+coverage/
+.nyc_output/
+
+# =========================
+# MongoDB
+# =========================
+*.mongodb
+dump/
+
+# =========================
+# Runtime Data
+# =========================
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# Package Manager
+# =========================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Uncomment ONE of the above lock files depending on your package manager.
+# Usually, you SHOULD commit your lock file. If you want reproducible builds,
+# remove the corresponding line above.
+
+# =========================
+# Temporary Files
+# =========================
+tmp/
+temp/
+*.tmp
+
+# =========================
+# Miscellaneous
+# =========================
+.vercel/
+.netlify/
+.firebase/
