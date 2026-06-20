@@ -11,7 +11,7 @@ app.use(cookieParser());
 
 
 app.use('/api/auth',authRoute);
-app.use('/api/post',postRoute);
+app.use('/api/posts',postRoute);
 
 
 module.exports = app;
