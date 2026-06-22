@@ -1,0 +1,5 @@
+1. Short Term Memory
+2. Long Term Memory
+3. RAG
+
+
