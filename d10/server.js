@@ -9,6 +9,9 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, { /* options */ });
 
+
+const chatHistory = []
+
 io.on("connection", (socket) => {
   console.log('A User Connected.....')
 
@@ -18,13 +21,21 @@ io.on("connection", (socket) => {
 
 
   socket.on("ai-message", async (data) => {
-    console.log("Message Recieved", data)
 
-    const resposne = await generateResponse(data.prompt);
+    chatHistory.push({
+      role: "user",
+      parts: [{ text: data.prompt }]
+    })
 
-    console.log(resposne);
+    const resposne = await generateResponse(chatHistory);
 
-    socket.emit("ai-message-response",{resposne})
+    socket.emit("ai-message-response", { resposne })
+
+    
+    chatHistory.push({
+      role: "model",
+      parts: [{ text: resposne }]
+    })
 
   })
 });
