@@ -12,6 +12,7 @@ const createChat = async (req,res) => {
 
     res.status(200).json({
         message:"Chat Created Successfully",
+        chat:chat.id
     })
 }
 
