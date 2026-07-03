@@ -2,21 +2,21 @@
 const { Pinecone } = require('@pinecone-database/pinecone');
 
 // Initialize a Pinecone client with your API key
-const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY});
+const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
 
 // Create a dense index with integrated embedding
 
 const cohortChatgptIndex = pc.Index('cohort-chat-gpt')
 
 
-async function createMemory({ vectors,messageId, metadata}) {
-    await cohortChatgptIndex.upsert([
-        {
+async function createMemory({ vectors, messageId, metadata }) {
+    await cohortChatgptIndex.upsert({
+        records: [{
             id: messageId,
             values: vectors,
             metadata
-        }
-    ]);
+        }]
+    });
 }
 
 

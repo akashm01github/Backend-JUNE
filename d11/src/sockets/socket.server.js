@@ -62,7 +62,8 @@ function initSocketServer(httpServer) {
                 messageId:"57145s2",
                 metadata:{
                     chat:messagePaylaod.chat,
-                    user:socket.user.id
+                    user:socket.user.id,
+                    text:messagePaylaod.content
                 }
             })
 
